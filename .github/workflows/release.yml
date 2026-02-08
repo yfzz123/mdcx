@@ -91,6 +91,10 @@ jobs:
         with:
           activate-environment: true
 
+      - name: Install system dependencies - macOS
+        if: ${{ matrix.build == 'macos' }}
+        run: brew install ffmpeg pkg-config
+
       - name: Set up python env
         run: uv sync --locked --all-extras --dev
 
