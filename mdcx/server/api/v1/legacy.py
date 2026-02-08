@@ -106,8 +106,12 @@ async def complete_actors():
 
 @router.post("/cookies", summary="Cookie 有效性检查", operation_id="checkCookies")
 async def check_cookies():
-    # This is a placeholder as the original logic is tied to UI.
-    return {"message": "Not Implemented yet, original logic is tied to UI."}
+    from mdcx.crawlers.fd2ppv import check_cookie_valid as fd2ppv_check
+
+    results = {}
+    valid, msg = await fd2ppv_check()
+    results["fd2ppv"] = {"valid": valid, "message": msg}
+    return results
 
 
 class SetSiteUrlBody(BaseModel):

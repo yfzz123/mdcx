@@ -338,6 +338,7 @@ class Config(BaseModel):
     )
     website_fc2: set[Website] = Field(
         default_factory=lambda: {
+            Website.FD2PPV,
             Website.FC2,
             Website.FC2CLUB,
             Website.FC2HUB,
@@ -609,6 +610,7 @@ class Config(BaseModel):
     theporndb_api_token: str = Field(default="", title="Theporndb API令牌")
     javdb: str = Field(default="", title="Javdb")
     javbus: str = Field(default="", title="Javbus")
+    fd2ppv: str = Field(default="", title="FD2PPV Cookie", description="fd2ppv.cc 需要登录, 请从浏览器复制完整 Cookie 字符串")
     # endregion
 
     # region: Log Settings

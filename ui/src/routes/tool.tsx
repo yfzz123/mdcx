@@ -145,8 +145,17 @@ function ToolComponent() {
   const handleCheckCookies = async () => {
     showInfo("正在检查Cookie有效性...");
     try {
-      await checkCookies.mutateAsync({});
-      showSuccess("Cookie检查已完成。");
+      const results = await checkCookies.mutateAsync({});
+      const data = results as unknown as Record<string, { valid: boolean; message: string }>;
+      const messages = Object.entries(data)
+        .map(([site, r]) => `${site}: ${r.message}`)
+        .join("\n");
+      const allValid = Object.values(data).every((r) => r.valid);
+      if (allValid) {
+        showSuccess(messages);
+      } else {
+        showError(messages);
+      }
     } catch (error) {
       showError(`Cookie检查失败: ${error}`);
     }

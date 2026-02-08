@@ -485,6 +485,7 @@ class ManualConfig:
         "fc2club": Website.FC2CLUB,
         "fc2hub": Website.FC2HUB,
         "fc2ppvdb": Website.FC2PPVDB,
+        "fd2ppv": Website.FD2PPV,
         "iqq": Website.IQQTV,
         "jav321": Website.JAV321,
         "javbus": Website.JAVBUS,
