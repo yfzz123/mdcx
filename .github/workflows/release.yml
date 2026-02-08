@@ -11,6 +11,18 @@ on:
       tag:
         description: "Tag"
         required: true
+      build_macos_aarch64:
+        description: "Build macOS aarch64"
+        type: boolean
+        default: true
+      build_macos_x86_64:
+        description: "Build macOS x86_64"
+        type: boolean
+        default: true
+      build_windows_x86_64:
+        description: "Build Windows x86_64"
+        type: boolean
+        default: true
 
 jobs:
   init-matrix:
@@ -21,15 +33,29 @@ jobs:
       # https://github.com/actions/runner/issues/1985#issuecomment-1573518052
       - name: Set matrix
         id: set-matrix
+        env:
+          BUILD_MACOS_AARCH64: ${{ github.event.inputs.build_macos_aarch64 || 'true' }}
+          BUILD_MACOS_X86_64: ${{ github.event.inputs.build_macos_x86_64 || 'true' }}
+          BUILD_WINDOWS_X86_64: ${{ github.event.inputs.build_windows_x86_64 || 'true' }}
         run: |
           items=()
 
           # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners
 
-          items+=('{"build": "macos", "os": "macos-latest", "arch": "aarch64"}')
-          items+=('{"build": "macos", "os": "macos-13", "arch": "x86_64"}')
+          if [ "$BUILD_MACOS_AARCH64" = "true" ]; then
+            items+=('{"build": "macos", "os": "macos-latest", "arch": "aarch64"}')
+          fi
+          if [ "$BUILD_MACOS_X86_64" = "true" ]; then
+            items+=('{"build": "macos", "os": "macos-13", "arch": "x86_64"}')
+          fi
+          if [ "$BUILD_WINDOWS_X86_64" = "true" ]; then
+            items+=('{"build": "windows", "os": "windows-latest", "arch": "x86_64"}')
+          fi
 
-          items+=('{"build": "windows", "os": "windows-latest", "arch": "x86_64"}')
+          if [ ${#items[@]} -eq 0 ]; then
+            echo "::error::At least one build target must be selected"
+            exit 1
+          fi
 
           # 合并items到json数组
           matrix="matrix=["
